@@ -37,12 +37,13 @@ All trial outcomes are stored within the report directory. The provided Jupyter 
 📁 Directory Structure
 Ensure the datasets LOFAR_Full_RFI_dataset and HERA-SIM_Full_RFI_dataset are appropriately placed:
 
-Remove-First-Detect-Later
-|-- data
-|-- src
-|   |-- architectures
-|   |-- experiment
-|   |-- models
-|   |-- report
-|   |-- simulation
-|   |-- utils
+Remove-First-Detect-Later  
+|-- data  
+|-- src  
+|----|-- architectures  
+|----|-- experiment  
+|----|-- models  
+|----|-- report  
+|----|-- simulation  
+|----|-- utils  
+
