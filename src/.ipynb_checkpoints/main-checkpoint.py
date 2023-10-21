@@ -1,15 +1,16 @@
 import subprocess
 import random
+import argparse
 
 def run_trials(num_trials):
     # List of configurations
     configurations = [
-        ("HERA", "AOFlagger", "50"),
-        ("LOFAR", "AOFlagger", "50"),
-        ("HERA", "Expert20", "100"),
-        ("LOFAR", "Expert20", "100"),
-        ("HERA", "Transfer", "100"),
-        ("LOFAR", "Transfer", "100")
+        ("HERA", "A", "50"),
+        ("LOFAR", "A", "50"),
+        ("HERA", "B", "100"),
+        ("LOFAR", "B", "100"),
+        ("HERA", "C", "100"),
+        ("LOFAR", "C", "100")
     ]
 
     for _ in range(num_trials):
@@ -18,5 +19,11 @@ def run_trials(num_trials):
         for dataset, labels, epochs in configurations:
             subprocess.call(["./run_trial.sh", seed, dataset, labels, epochs, str(num_trials)])
 
-# Usage example:
-run_trials(10)  # This will generate 10 random seeds and run the script 60 times (6 configs x 10 seeds) with those seeds
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Run experiments for a specified number of trials.")
+    parser.add_argument("--num_trials", type=int, default=3, help="Number of trials to run each configuration.")
+    
+    args = parser.parse_args()
+
+    run_trials(args.num_trials)

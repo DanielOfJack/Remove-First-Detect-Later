@@ -181,8 +181,8 @@ def main(dataset):
     print("TRAINING CDAE...")
 
     cdae = CDAE((64,64,1))
-    checkpoint = ModelCheckpoint('checkpoint.h5', monitor='val_loss', mode='min', save_best_only=True, verbose=1)
-    cdae.fit(X_train_corrupted, y_train_combined, epochs=1, batch_size=128, validation_split=0.2, verbose=1, callbacks=[checkpoint])
+    checkpoint = ModelCheckpoint(f'models/{dataset}checkpoint.h5', monitor='val_loss', mode='min', save_best_only=True, verbose=1)
+    cdae.fit(X_train_corrupted, y_train_combined, epochs=120, batch_size=128, validation_split=0.2, verbose=1, callbacks=[checkpoint])
     cdae.save(f'../models/{dataset}/CDAE.h5')
 
     print("MODEL SAVED!")

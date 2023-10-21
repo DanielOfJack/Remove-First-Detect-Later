@@ -77,7 +77,7 @@ class Convolutional:
             "RFDL": RFDL_RNET7,
         }
         
-        loaded_model = load_model(f"models/HERA/{self.model_name}_AOFlagger.h5")
+        loaded_model = load_model(f"models/HERA/{self.model_name}_A.h5")
         
         model = model_map[self.model_name](tensor_shape, self.activation, trainable=False)
         model.set_weights(loaded_model.get_weights())

@@ -60,7 +60,7 @@ def smooth_images(images):
     
     return smoothed_images
 
-def train_convolutional(save_name, model_name, data_name, loss, X_train, y_train, X_val, y_val, epochs, labels, save=True):
+def train_convolutional(save_name, model_name, data_name, loss, X_train, y_train, X_val, y_val, epochs, experiment, save=True):
     
     patch_sz = 512
     if model_name == 'RFDL':
@@ -77,7 +77,7 @@ def train_convolutional(save_name, model_name, data_name, loss, X_train, y_train
     model = conv.compile_model()
     model, score = conv.train_model(model, X_train, y_train, X_val, y_val)
     if (save):
-        model.save(f'models/{data_name}/{model_name}_{labels}.h5')
+        model.save(f'models/{data_name}/{model_name}_{experiment}.h5')
         # conv.plot_training_history()
     return model
 
@@ -94,7 +94,7 @@ def main(args):
     #Load Training Data
     X_train, y_train, X_test, y_test = load_pickle(data_path, limit=1500, dataset = args.dataset)
     
-    if (args.labels == 'Expert20'):
+    if (args.experiment == 'B'):
         X_train_trial, y_train_trial, X_val_trial, y_val_trial, X_test_trial, y_test_trial = get_expert_train_test(X_test, y_test, args)
         X_train, y_train = None, None
         gc.collect()
@@ -111,7 +111,7 @@ def main(args):
         y_test_trial = y_test
         
     print("TRAINING")
-    model = train_convolutional(args.save_name, args.model_name, args.dataset, args.loss, X_train_trial, y_train_trial, X_val_trial, y_val_trial, args.epochs, args.labels, save=True)
+    model = train_convolutional(args.save_name, args.model_name, args.dataset, args.loss, X_train_trial, y_train_trial, X_val_trial, y_val_trial, args.epochs, args.experiment, save=True)
     
     if args.report:
         print("TESTING")
@@ -158,7 +158,7 @@ def main(args):
             os.makedirs(dir_path)
 
         # Check if the CSV file exists
-        file_path = f'report/{args.dataset}/{args.labels}_Labels.csv'
+        file_path = f'report/{args.dataset}/Experiment_{args.experiment}.csv'
         write_header = not os.path.exists(file_path)
 
         # Append results to CSV and write header only if the file doesn't exist
@@ -171,7 +171,7 @@ if __name__ == "__main__":
     parser.add_argument('--save_name', type=str, default=None, help='Name of Save File')
     parser.add_argument('--loss', choices=['mse', 'binary_crossentropy'], default="mse", help='Loss to be used')
     parser.add_argument('--dataset', choices=['LOFAR', 'HERA'], default='LOFAR', help='Dataset to be used.')
-    parser.add_argument('--labels', choices=['AOFlagger', 'Expert20'], default='Expert20', help='Type of labels to use for experiment')
+    parser.add_argument('--experiment', choices=['A', 'B'], default='A', help='Type of labels to use for experiment')
     parser.add_argument('--seed', type=int, default=None, help='Seed for data split')
     parser.add_argument('--epochs', type=int, default=None, help='Seed for data split')
     parser.add_argument('--report', type=int, default=1, help='Report results (1: Yes, 0: No')

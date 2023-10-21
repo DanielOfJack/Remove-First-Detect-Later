@@ -62,7 +62,7 @@ def smooth_images(images):
     
     return smoothed_images
 
-def train_convolutional(save_name, model_name, data_name, loss, X_train, y_train, X_val, y_val, epochs, labels, save=True):
+def train_convolutional(save_name, model_name, data_name, loss, X_train, y_train, X_val, y_val, epochs, save=True):
     
     patch_sz = 512
     if model_name == 'RFDL':
@@ -80,7 +80,7 @@ def train_convolutional(save_name, model_name, data_name, loss, X_train, y_train
     model = conv.compile_transfer_model()
     model, score = conv.train_model(model, X_train, y_train, X_val, y_val)
     if (save):
-        model.save(f'../models/{data_name}/{save_name}_{labels}.h5')
+        model.save(f'../models/{data_name}/{model_name}_C.h5')
         # conv.plot_training_history()
     return model
 
@@ -102,7 +102,7 @@ def main(args):
     gc.collect()
         
     print("TRAINING")
-    model = train_convolutional(args.save_name, args.model_name, args.dataset, args.loss, X_train_trial, y_train_trial, X_val_trial, y_val_trial, args.epochs, args.labels, save=True)
+    model = train_convolutional(args.save_name, args.model_name, args.dataset, args.loss, X_train_trial, y_train_trial, X_val_trial, y_val_trial, args.epochs, save=True)
 
     print("TESTING")
     y_pred_probs = model.predict(X_test_trial).reshape(-1,1)
@@ -148,7 +148,7 @@ def main(args):
         os.makedirs(dir_path)
     
     # Check if the CSV file exists
-    file_path = f'report/{args.dataset}/{args.labels}_Labels.csv'
+    file_path = f'report/{args.dataset}/Experiment_C.csv'
     write_header = not os.path.exists(file_path)
 
     # Append results to CSV and write header only if the file doesn't exist
@@ -161,7 +161,6 @@ if __name__ == "__main__":
     parser.add_argument('--save_name', type=str, default=None, help='Name of Save File')
     parser.add_argument('--loss', choices=['mse', 'binary_crossentropy'], default="mse", help='Loss to be used')
     parser.add_argument('--dataset', choices=['LOFAR', 'HERA'], default='LOFAR', help='Model architecture to be used')
-    parser.add_argument('--labels', choices=['Transfer'], default='Transfer', help='Type of labels to use for experiment')
     parser.add_argument('--seed', type=int, default=None, help='Seed for data split')
     parser.add_argument('--epochs', type=int, default=None, help='Seed for data split')
     args = parser.parse_args()
